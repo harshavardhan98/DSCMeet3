@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <ImageView
+        android:id="@+id/iv_dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_centerVertical="true"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_toRightOf="@id/iv_dp"
+        android:text="Harsha"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_msg"
+        android:layout_toRightOf="@id/iv_dp"
+        android:layout_below="@id/tv_name"
+        android:text="Hello, how are you doing?"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="8:30pm"
+        android:padding="5dp"/>
+
+</RelativeLayout>
