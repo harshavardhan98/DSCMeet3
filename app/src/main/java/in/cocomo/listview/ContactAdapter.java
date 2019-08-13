@@ -49,7 +49,6 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
             3. Add the library dependency of glide library in the app level gradle file
                ref: https://github.com/bumptech/glide
 
-
             4. Use the below code to load image from the url into the imageview
 
          */

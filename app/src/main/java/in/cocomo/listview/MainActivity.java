@@ -1,11 +1,23 @@
 package in.cocomo.listview;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,22 +26,53 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final String TAG="Whatsapp";
 
-        String dp_url1="https://upload.wikimedia.org/wikipedia/en/d/d7/Harry_Potter_character_poster.jpg";
-        String dp_url2="https://upload.wikimedia.org/wikipedia/en/d/d3/Hermione_Granger_poster.jpg";
+        final ArrayList<Contact> contacts = new ArrayList<>();
+        final ContactAdapter adapter = new ContactAdapter(this, R.layout.listitem, contacts);
+        final ListView lv_item = findViewById(R.id.llcontact);
 
+        OkHttpClient okHttpClient=new OkHttpClient();
+        Request request = new Request.Builder().url("http://104.211.25.140/whatsapp/getAll.php").build();
 
-        ArrayList<Contact> contacts = new ArrayList<>();
-        contacts.add(new Contact("Logesh","hi",dp_url1,"05:50AM"));
-        contacts.add(new Contact("Harsha","Hello",dp_url2,"05:50AM"));
-        contacts.add(new Contact("Tarun","Good Morning",dp_url1,"05:50AM"));
-        contacts.add(new Contact("Ezhil","Bye!!",dp_url2,"05:50AM"));
-        contacts.add(new Contact("Kaushik","Hey!",dp_url1,"05:50AM"));
+        okHttpClient.newCall(request).enqueue(new Callback() {
 
-        ContactAdapter adapter = new ContactAdapter(this, R.layout.listitem, contacts);
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d(TAG,e.getMessage());
+            }
 
-        ListView lv_item = findViewById(R.id.llcontact);
-        lv_item.setAdapter(adapter);
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                try{
+                    String temp=response.body().string();
+                    JSONArray jsonArray=new JSONArray(temp);
+
+                    for(int i=0;i<jsonArray.length();i++) {
+                        JSONObject jsonObject=jsonArray.getJSONObject(i);
+
+                        String name=jsonObject.getString("name");
+                        String dp_url=jsonObject.getString("dp_url");
+                        String message=jsonObject.getString("message");
+                        String time=jsonObject.getString("time");
+
+                        contacts.add(new Contact(name, message,dp_url, time));
+                    }
+
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            lv_item.setAdapter(adapter);
+                        }
+                    });
+                }
+                catch (Exception e){
+                    Log.d(TAG,e.getMessage()+" ");
+                }
+
+            }
+        });
     }
 }
 
